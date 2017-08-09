@@ -128,7 +128,7 @@ class JsonTest(unittest.TestCase):
         self.assertRaises(_exception, self.doReadBadEscapedHexCharacter)
 
     def doReadBadEscapedHexCharacter(self):
-        cjson.decode('"\u10K5"')
+        cjson.decode(u'"\\u10K5"')
 
     def testReadBadObjectKey(self):
         self.assertRaises(_exception, self.doReadBadObjectKey)
@@ -141,7 +141,7 @@ class JsonTest(unittest.TestCase):
 
     def doReadBadArray(self):
         cjson.decode('[1,2,3,,]')
-        
+
     def testReadBadObjectSyntax(self):
         self.assertRaises(_exception, self.doReadBadObjectSyntax)
 
@@ -159,7 +159,7 @@ class JsonTest(unittest.TestCase):
     def testReadNegativeIntegerValue(self):
         obj = cjson.decode('{ "key" : -44 }')
         self.assertEqual({ "key" : -44 }, obj)
-        
+
     def testReadFloatValue(self):
         obj = cjson.decode('{ "age" : 44.5 }')
         self.assertEqual({ "age" : 44.5 }, obj)
@@ -176,7 +176,7 @@ class JsonTest(unittest.TestCase):
 
     def testReadSmallObject(self):
         obj = cjson.decode('{ "name" : "Patrick", "age":44} ')
-        self.assertEqual({ "age" : 44, "name" : "Patrick" }, obj)        
+        self.assertEqual({ "age" : 44, "name" : "Patrick" }, obj)
 
     def testReadEmptyArray(self):
         obj = cjson.decode('[]')
@@ -194,7 +194,7 @@ class JsonTest(unittest.TestCase):
 
     def testWriteSmallObject(self):
         s = cjson.encode({ "name" : "Patrick", "age": 44 })
-        self.assertEqual('{"age":44,"name":"Patrick"}', _removeWhitespace(s))
+        self.assertEqual('{"name":"Patrick","age":44}', _removeWhitespace(s))
 
     def testWriteFloat(self):
         n = 3.44556677
@@ -276,7 +276,7 @@ class JsonTest(unittest.TestCase):
         obj = [{"name":"Patrick","age":44,"Employed?":True,"Female?":False,"grandchildren":None},
                "used","abused","confused",
                1,2,[3,4,5]]
-        self.assertEqual('[{"Female?":false,"age":44,"name":"Patrick","grandchildren":null,"Employed?":true},"used","abused","confused",1,2,[3,4,5]]',
+        self.assertEqual('[{"name":"Patrick","age":44,"Employed?":true,"Female?":false,"grandchildren":null},"used","abused","confused",1,2,[3,4,5]]',
                          _removeWhitespace(cjson.encode(obj)))
 
 
@@ -290,7 +290,7 @@ class JsonTest(unittest.TestCase):
 
     def testStringEncoding(self):
         s = cjson.encode([1, 2, 3])
-        self.assertEqual(unicode("[1,2,3]", "utf-8"), _removeWhitespace(s))
+        self.assertEqual("[1,2,3]", _removeWhitespace(s))
 
     def testReadEmptyObjectAtEndOfArray(self):
         self.assertEqual(["a","b","c",{}],
@@ -329,7 +329,7 @@ class JsonTest(unittest.TestCase):
                          u'\u1234\u1234\u1234\u1234\u1234\u1234')
         self.assertEqual(r'"\U0001d11e\U0001d11e\U0001d11e\U0001d11e'
                          r'\u1234\u1234\u1234\u1234\u1234\u1234"', s)
-        
+
 def main():
     unittest.main()
 
